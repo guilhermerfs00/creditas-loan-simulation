@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -25,14 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResourceServerConfig {
 
-    private static final String[] PUBLIC = {"/hr-oauth/oauth/token"};
-    private static final String[] OPERATOR = {"/hr-worker/**"};
+    private static final String[] PUBLIC = {"/ce-auth-ms/oauth2/token"};
     private static final String[] ADMIN = {
-            "/hr-payroll/**",
-            "/hr-user/**",
+            "/ce-user-ms/**",
             "/actuator/**",
-            "/hr-worker/actuator/**",
-            "/hr-oauth/actuator/**"
+            "/ce-auth-ms/actuator/**"
     };
 
     @Bean
@@ -41,7 +37,6 @@ public class ResourceServerConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(PUBLIC).permitAll()
-                        .pathMatchers(HttpMethod.GET, OPERATOR).hasAnyRole("OPERATOR", "ADMIN")
                         .pathMatchers(ADMIN).hasRole("ADMIN")
                         .anyExchange().authenticated()
                 )
