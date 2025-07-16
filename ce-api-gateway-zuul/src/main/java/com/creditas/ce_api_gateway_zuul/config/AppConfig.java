@@ -1,21 +1,28 @@
 package com.creditas.ce_api_gateway_zuul.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @RefreshScope
 @Configuration
 public class AppConfig {
 
-    private static final String SECRET_KEY = "segredo-123";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withSecretKey(
-                new javax.crypto.spec.SecretKeySpec(SECRET_KEY.getBytes(), "HmacSHA256")
-        ).build();
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
+        tokenConverter.setSigningKey(jwtSecret);
+        return tokenConverter;
+    }
+
+    @Bean
+    public JwtTokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
     }
 }
