@@ -1,6 +1,6 @@
 package com.creditas.ce_auth_ms.client;
 
-import com.creditas.ce_auth_ms.model.entity.User;
+import com.creditas.ce_auth_ms.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import org.springframework.http.ResponseEntity;

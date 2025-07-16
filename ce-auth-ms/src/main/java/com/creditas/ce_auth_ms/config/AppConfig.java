@@ -3,30 +3,21 @@ package com.creditas.ce_auth_ms.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+
+import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 public class AppConfig {
 
-	@Value("${jwt.secret}")
-	private String jwtSecret;
-	
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-	@Bean
-	public JwtAccessTokenConverter accessTokenConverter() {
-		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-		tokenConverter.setSigningKey(jwtSecret);
-		return tokenConverter;
-	}
-	
-	@Bean
-	public JwtTokenStore tokenStore() {
-		return new JwtTokenStore(accessTokenConverter());
-	}
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder
+                .withSecretKey(new SecretKeySpec(jwtSecret.getBytes(), "HmacSHA256"))
+                .build();
+    }
 }
