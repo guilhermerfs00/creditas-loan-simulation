@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: ce-api-gateway
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8888
+    gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 20000
+      routes:
+        - id: auth-service
+          uri: lb://ce-auth-ms
+          predicates:
+            - Path=/ce-auth-ms/**
+        - id: loan-service
+          uri: lb://ce-loan-ms
+          predicates:
+            - Path=/ce-loan-ms/**
+        - id: user-service
+          uri: lb://ce-user-ms
+          predicates:
+            - Path=/ce-user-ms/**
+
+server:
+  port: 8765
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: mySecretKey
