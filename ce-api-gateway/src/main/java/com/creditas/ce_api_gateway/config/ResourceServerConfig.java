@@ -1,4 +1,4 @@
-package com.creditas.ce_api_gateway_zuul.config;
+package com.creditas.ce_api_gateway.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResourceServerConfig {
 
-    private static final String[] PUBLIC = {"/ce-auth-ms/oauth2/token"};
+    private static final String[] PUBLIC = {"/ce-auth-ms/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**"};
     private static final String[] ADMIN = {
             "/ce-user-ms/**",
             "/actuator/**",

@@ -3,7 +3,9 @@ package com.creditas.ce_auth_ms.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -11,11 +13,9 @@ import org.springframework.security.oauth2.server.authorization.client.InMemoryR
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationConverter;
 
-import java.time.Duration;
 import java.util.UUID;
 
 @Configuration
@@ -34,6 +34,16 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
+    public AuthenticationProvider passwordAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new PasswordAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
+    @Bean
+    public AuthenticationConverter passwordAuthenticationConverter() {
+        return new PasswordAuthenticationConverter();
+    }
+
+    @Bean
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/oauth2/token"));
@@ -46,14 +56,11 @@ public class AuthorizationServerConfig {
                 .clientId(clientName)
                 .clientSecret(passwordEncoder.encode(clientSecret))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .scope("read")
                 .scope("write")
-                .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofSeconds(86400))
-                        .reuseRefreshTokens(true)
-                        .build())
                 .build();
 
         return new InMemoryRegisteredClientRepository(registeredClient);

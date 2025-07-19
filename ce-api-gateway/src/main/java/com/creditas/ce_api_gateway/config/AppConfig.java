@@ -1,4 +1,4 @@
-package com.creditas.ce_api_gateway_zuul.config;
+package com.creditas.ce_api_gateway.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
