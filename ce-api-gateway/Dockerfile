@@ -7,7 +7,7 @@ FROM eclipse-temurin:21-jdk-alpine
 VOLUME /tmp
 WORKDIR /app
 
-COPY --from=builder /app/target/ce-api-gateway-zuul-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/ce-api-gateway-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8765
 
