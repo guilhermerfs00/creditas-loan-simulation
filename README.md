@@ -8,27 +8,14 @@ Este é um microserviço desenvolvido em **Spring Boot** que oferece funcionalid
 
 ### Visão Geral da Arquitetura
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Frontend/     │    │   API Gateway/   │    │   Microserviço  │
-│   Client Apps   │◄──►│   Load Balancer  │◄──►│   ce-loan-ms    │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                        │
-                       ┌─────────────────┐              │
-                       │   Monitoring    │◄─────────────┤
-                       │   (Actuator)    │              │
-                       └─────────────────┘              │
-                                                        │
-                       ┌─────────────────┐              │
-                       │   Security      │◄─────────────┤
-                       │   (JWT/OAuth)   │              │
-                       └─────────────────┘              │
-                                                        │
-                       ┌─────────────────┐              │
-                       │   Database      │◄─────────────┘
-                       │   (PostgreSQL)  │
-                       └─────────────────┘
-```
+#### Arquitetura dos Microserviços
+![Arquitetura dos Microserviços](helper/img.png)
+
+#### Fluxo de Autenticação JWT
+![Fluxo de Autenticação](helper/img_1.png)
+
+#### Detalhes da Autenticação
+![Detalhes da Autenticação](helper/img_2.png)
 
 ## Stack Tecnológica
 
